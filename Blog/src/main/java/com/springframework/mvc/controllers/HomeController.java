@@ -30,6 +30,7 @@ public class HomeController {
 		else if(getRole().equals("ROLE_ADMIN"))
 			return "redirect:/admin";
 		
+		
 		logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("location", "home");
 		

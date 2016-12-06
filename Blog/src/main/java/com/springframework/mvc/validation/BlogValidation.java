@@ -1,14 +1,19 @@
 package com.springframework.mvc.validation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import com.springframework.mvc.dao.BlogDao;
 import com.springframework.mvc.models.Blog;
 
 @Component
 public class BlogValidation implements Validator{
+	
+	@Autowired
+	BlogDao blogDAO;
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -28,6 +33,10 @@ public class BlogValidation implements Validator{
 		
 		if(blog.getBlogName().length() < 3){
 			errors.rejectValue("BlogName","blog.BlogName.size");
+		}
+		
+		if(blogDAO.isThereSameBlogUrl(blog.getBlogUrl())){
+			errors.rejectValue("BlogUrl","blog.BlogUrl.isThereSameBlogUrl");
 		}
 		
 		

@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
+
 @Component("emailValidator")
 public class EmailValidation {
 

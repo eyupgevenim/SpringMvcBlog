@@ -15,6 +15,10 @@
 		  <meta name="author" content="eyup">
 		  <link href="<c:url value="/resources/img/home/ico-blog198x198.png" />" rel="shortcut icon" type="image/x-icon"/>
 		  
+		  <meta name="_csrf" content="${_csrf.token}"/>
+		  <!-- default header name is X-CSRF-TOKEN -->
+		  <meta name="_csrf_header" content="${_csrf.headerName}"/>
+		  
 		  <!--  
 		  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
 		        rel="stylesheet"  type="text/css" />
@@ -93,25 +97,97 @@
 		    <script type="text/javascript">
 				  $(function () {
 					  
-					    $('.navbar-toggle').click(function () {
-					        $('.navbar-nav').toggleClass('slide-in');
+					   	//for slide => .navbar-toggle and #search-trigger click
+					    $(document.body).on("click", ".navbar-toggle", function(){
+						  $('.navbar-nav').toggleClass('slide-in');
 					        $('.side-body').toggleClass('body-slide-in');
 					        $('#search').removeClass('in').addClass('collapse').slideUp(200);
-					
-					        /// uncomment code for absolute positioning tweek see top comment in css
+					        
+					      /// uncomment code for absolute positioning tweek see top comment in css
 					        //$('.absolute-wrapper').toggleClass('slide-in');
-					
-					    });
-					
-					   // Remove menu for searching
-					   $('#search-trigger').click(function () {
-					        $('.navbar-nav').removeClass('slide-in');
+						});
+					  
+					    $(document.body).on("click", "#search-trigger", function(){
+						    $('.navbar-nav').removeClass('slide-in');
 					        $('.side-body').removeClass('body-slide-in');
-					
-					        /// uncomment code for absolute positioning tweek see top comment in css
+					        
+					      /// uncomment code for absolute positioning tweek see top comment in css
 					        //$('.absolute-wrapper').removeClass('slide-in');
-					
-					    });
+						});
+						  
+					   //when user page load this mathod run
+					   $(window).load(function() {
+						   
+						  var token = $("meta[name='_csrf']").attr("content");
+					      var header = $("meta[name='_csrf_header']").attr("content");
+						  
+						   $.ajax({
+								type : "POST",
+								url : "${pageContext.request.contextPath}/user/getUserMenu",
+								data: token,
+						        beforeSend:function(xhr){
+						             xhr.setRequestHeader(header, token);
+						        },
+								timeout : 100000,
+								success : function(data) {
+									//console.log("SUCCESS: ", data);
+									
+									$(".userFullName").text(data["user"].firstName +" "+data["user"].lastName );
+									
+									if(data["listBlog"].length > 0){
+										$.each(data["listBlog"], function(key, value){
+											$("#userSettingsMenuLink").after(
+													'<!-- Dropdown -->'+
+										            '<li class="panel panel-default" id="dropdown">'+
+										                '<a data-toggle="collapse" href="#dropdown-lvl'+value.id+'">'+
+										                    '<span class="glyphicon glyphicon-book"></span> '+value.blogName+' <span class="caret"></span>'+
+										                '</a>'+
+										
+										                '<!-- Dropdown level 1 -->'+
+										                '<div id="dropdown-lvl'+value.id+'" class="panel-collapse collapse">'+
+										                    '<div class="panel-body">'+
+										                        '<ul class="nav navbar-nav">'+
+										                            '<li>'+
+										                            	'<a href="${pageContext.request.contextPath}/user/post/'+value.blogUrl+'">'+
+										                            		'<span class="glyphicon glyphicon-pencil"></span> Yazılar'+
+										                            	'</a>'+
+										                            '</li>'+
+										                            '<li>'+
+										                            	'<a href="${pageContext.request.contextPath}/user/commentBlog/'+value.blogUrl+'">'+
+										                            		'<span class="glyphicon glyphicon-comment"></span> Yorumlar'+
+										                            	'</a>'+
+										                            '</li>'+
+										
+										
+										                            '<!-- Dropdown level 2 -->'+
+										                            '<li class="panel panel-default" id="dropdown">'+
+										                                '<a data-toggle="collapse" href="#dropdown-lvl1-settings-'+value.id+'">'+
+										                                    '<span class="glyphicon glyphicon-cog"></span> Ayarlar <span class="caret"></span>'+
+										                                '</a>'+
+										                                '<div id="dropdown-lvl1-settings-'+value.id+'" class="panel-collapse collapse">'+
+										                                    '<div class="panel-body">'+
+										                                        '<ul class="nav navbar-nav">'+
+										                                            '<li><a href="#">Ayar1</a></li>'+
+										                                            '<li><a href="#">Ayar2</a></li>'+
+										                                            '<li><a href="#">Ayar3</a></li>'+
+										                                        '</ul>'+
+										                                   ' </div>'+
+										                                '</div>'+
+										                            '</li>'+
+										                        '</ul>'+
+										                    '</div>'+
+										                '</div>'+
+										            '</li>'
+											);//$("#userSettingsMenuLink").after()
+									    });//$.each(data["listBlog"], function(key, value)
+									}//if(data["listBlog"].length > 0)
+								},
+								error : function(e) {
+									console.log("ERROR: ", e);
+								}
+							});//$.ajax
+							
+						});//$(window).load
 					   
 						
 						 	

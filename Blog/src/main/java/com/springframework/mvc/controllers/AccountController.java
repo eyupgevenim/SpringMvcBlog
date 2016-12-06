@@ -55,12 +55,12 @@ public class AccountController {
 	
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String loginPage() {
+	public String login() {
 		return "users/account/login";
 	}
 
 	@RequestMapping(value="logout", method = RequestMethod.GET)
-	public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+	public String logout (HttpServletRequest request, HttpServletResponse response) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null){    

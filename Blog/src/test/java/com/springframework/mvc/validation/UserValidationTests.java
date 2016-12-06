@@ -1,45 +1,77 @@
 package com.springframework.mvc.validation;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.junit.Assert.*;
 
-import org.junit.Before;
+import java.util.Locale;
+
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+
+import com.springframework.mvc.AbstractContextControllerTests;
+import com.springframework.mvc.models.User;
+
 import org.junit.Test;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class UserValidationTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+public class UserValidationTests extends AbstractContextControllerTests {
 
-	private MockMvc mockMvc;
-
-	@Before
-	public void setup() throws Exception {
-		this.mockMvc = standaloneSetup(new UserValidation()).alwaysExpect(status().isOk()).build();
-	}
-
+	@Autowired
+	UserValidation userValidation;
+	
+	@Autowired
+	private MessageSource messageSource;
+	
 	@Test
-	public void validateSuccess() throws Exception {
-		this.mockMvc.perform(get("/validate")
-				.param("UserName", "test")
-				.param("FirstName", "Eyup")
-				.param("LastName", "Gevenim")
-				.param("Email", "test@test.com")
-				.param("Password", "123")
-				.param("ConfirmPassword", "123"))
-				.andExpect(content().string("No errors"));
+	public void testValidateErrors(){
+		
+		User user = new User(){
+			{
+				setUserName("ey");
+				setFirstName("Eyup");
+				setLastName("Gevenim");
+				setEmail("e@e.com");
+				setPassword("123");
+				setConfirmPassword("12");
+			}
+		};
+		
+		Errors errors = new BeanPropertyBindingResult(user, "user");
+		userValidation.validate(user, errors);
+		assertTrue(errors.hasErrors());
+		assertTrue( errors.getErrorCount() == 3 );
+		assertEquals("Kullan\u0131c\u0131 ad\u0131 en az ьз karekter olmal\u0131.", 
+				getConfiguredMessage(errors.getFieldError("UserName")));
+		
 	}
-
+	
+	
 	@Test
-	public void validateErrors() throws Exception {
-		this.mockMvc.perform(get("/validate")
-				.param("UserName", "test")
-				.param("FirstName", "Eyup")
-				.param("LastName", "Gevenim")
-				.param("Email", "test.com")
-				.param("Password", "123")
-				.param("ConfirmPassword", "123"))
-				.andExpect(content().string("Object has validation errors"));
+	public void testValidateSuccess() throws Exception {
+		
+		User user = new User(){
+			{
+				setUserName("testSuccess");
+				setFirstName("Test");
+				setLastName("Test");
+				setEmail("testValidationSuccess@test.com");
+				setPassword("123");
+				setConfirmPassword("123");
+			}
+		};
+		
+		Errors errors = new BeanPropertyBindingResult(user, "user");
+		userValidation.validate(user, errors);
+		assertFalse(errors.hasErrors()); 
 	}
-
+	
+	private String getConfiguredMessage(FieldError fieldError) {
+	    return messageSource.getMessage(fieldError.getCode(), 
+	                                    fieldError.getArguments(), 
+	                                    Locale.US);
+	}
 }

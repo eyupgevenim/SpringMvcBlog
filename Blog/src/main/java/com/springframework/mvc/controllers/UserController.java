@@ -45,14 +45,12 @@ public class UserController {
 	
 	@RequestMapping(value = {"","/","panel"}, method = RequestMethod.GET)
 	public String user( Model model) {
-		setUserMenus(model);
 		
 		return "users/manages/user";
 	}
 	
 	@RequestMapping(value = "setting", method = RequestMethod.GET)
 	public String setting( Model model) {
-		setUserMenus(model);
 		
 		User user = getUser();
 		model.addAttribute("userName", user.getUserName());
@@ -65,7 +63,6 @@ public class UserController {
 	
 	@RequestMapping(value = "newBlog", method = RequestMethod.GET)
 	public String newBlog( Model model) {
-		setUserMenus(model);
 		
 		model.addAttribute("blog", new Blog());
 		model.addAttribute("category", categoryDAO.findAllCategory());
@@ -78,7 +75,6 @@ public class UserController {
 		
 		blogValidator.validate(blog, result);
 		if(result.hasErrors()){
-			setUserMenus(model);
 			model.addAttribute("blog", blog);
 			model.addAttribute("category", categoryDAO.findAllCategory());
 			return "users/manages/user-new-blog";
@@ -100,21 +96,18 @@ public class UserController {
 	
 	@RequestMapping(value = "commentBlog/{blogUrl}", method = RequestMethod.GET)
 	public String commentBlog(@PathVariable("blogUrl") String blogUrl, Model model) throws Exception {
-		setUserMenus(model);
 		
 		return "users/manages/user-blog-comments";
 	}
 	
 	@RequestMapping(value = "/post/{blogUrl}", method = RequestMethod.GET)
 	public String post(@PathVariable("blogUrl") String blogUrl, Model model) throws Exception {
-		setUserMenus(model);
 		
 		return "users/manages/user-blog-posts";
 	}
 	
 	@RequestMapping(value = "addPost", method = RequestMethod.GET)
 	public String addPost( Model model) {
-		setUserMenus(model);
 		
 		model.addAttribute("location", "addPost");
 		return "users/manages/user-blog-posts-add";
@@ -147,7 +140,7 @@ public class UserController {
 			obj.put("errorNewConfirmPassword", "Yeni parola tekrarý zorunludur!");
 		} else if (!newPassword.equals(newConfirmPassword)) {
 			obj.put("status", "fail");
-			obj.put("errorNewConfirmPassword", "Eski ile yeni parola eþleþmiyor!");
+			obj.put("errorNewConfirmPassword", "Yeni parola ile yeni parola tekrarý eþleþmiyor!");
 		}
 		
 		if(obj.get("status") == "success"){
@@ -224,6 +217,26 @@ public class UserController {
 		User user = getUser();
 		model.addAttribute("userFullName", user.getFirstName()+" "+user.getLastName());
 		model.addAttribute("listBlog", blogDAO.getUserBlogs(user.getEmail()));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "getUserMenu", method = RequestMethod.POST)
+	public  Map<String,Object> getUserMenu(HttpServletRequest request, HttpServletResponse response){
+		
+		User user = getUser();
+		
+		Map<String,Object> obj = new HashMap<String,Object>();
+		User u = new User();
+		
+		u.setUserName(user.getUserName());
+		u.setFirstName(user.getFirstName());
+		u.setLastName(user.getLastName());
+		u.setEmail(user.getEmail());
+		
+		obj.put("user",u);
+		obj.put("listBlog", blogDAO.getUserBlogs(user.getEmail()));
+		
+		return obj;
 	}
 	
 }

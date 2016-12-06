@@ -44,6 +44,7 @@ public class UserValidation implements Validator {
 			errors.rejectValue("LastName","user.LastName.size");
 		}
 		
+		
 		if(userDAO.isThereSameUserName(user.getUserName())){
 			errors.rejectValue("UserName","user.UserName.thereIsSame",
 					new Object[]{user.getFirstName(),user.getLastName()},"");

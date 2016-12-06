@@ -24,8 +24,9 @@
             <!-- Brand -->
             <div class="brand-name-wrapper">
                 <a class="navbar-brand" href="${pageContext.request.contextPath}/user">
-                	${userFullName}
+                	<span class="userFullName"> </span>
                 	<%-- 
+                	${userFullName}
                     ${listBlog[0].user.firstName} ${listBlog[0].user.lastName}
                      --%>
                 </a>
@@ -56,9 +57,9 @@
         <ul class="nav navbar-nav">
 
             <li><a href="#"><span class="glyphicon glyphicon-send"></span> Dashboard (genel blog bilgileri)</a></li>
-            <li class="active"><a href="${pageContext.request.contextPath}/user/setting"><span class="glyphicon glyphicon-cog"></span> Kullanıcı Ayarları</a></li>
+            <li class="active" id="userSettingsMenuLink"><a href="${pageContext.request.contextPath}/user/setting"><span class="glyphicon glyphicon-cog"></span> Kullanıcı Ayarları</a></li>
 			
-			
+			<%-- 
 			<c:if test="${not empty listBlog}">
 				<c:forEach var="blog" items="${listBlog}">
 						
@@ -105,7 +106,8 @@
 			            </li>
 						
 				</c:forEach>
-			</c:if>
+			</c:if> 
+			--%>
 
             <li><a href="${pageContext.request.contextPath}/account/logout"><span class="glyphicon glyphicon-off"></span> Çıkış yap</a></li>
 
