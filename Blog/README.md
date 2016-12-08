@@ -15,6 +15,7 @@ Server Side:
 - JUnit 4.11
 - Jstl 1.2
 - log4j 1.2.16
+-Spring Security Test 4.0.0.RC2
 
 - Maven 2.3.2
 - MySQL 5.6.24

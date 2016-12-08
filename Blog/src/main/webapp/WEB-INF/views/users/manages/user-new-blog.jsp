@@ -62,7 +62,7 @@
 						<div class="col-xs-12 col-md-4">
 							<div class="lbl-ui select pl0 col-md-9">
 								<form:input path="BlogName" type="text" class="form-control" 
-									pattern="[A-Za-zÐðÜüÞþÝÖöÇç]{3}[ A-Za-zÐðÜüÞþÝÖöÇç]{0,17}" title="En az üç karekter içermeli"
+									pattern="[A-Za-zÐðÜüÞþÝÖöÇçý]{3}[ A-Za-zÐðÜüÞþÝÖöÇçý]{0,17}" title="En az üç karekter içermeli"
 									required="required" placeholder="Blog Adiniz" />
 							</div>
 						</div>

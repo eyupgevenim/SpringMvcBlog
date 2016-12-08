@@ -264,6 +264,7 @@
 									if (data["status"] == "success") {
 										$("#btnSubmitUserInformation").attr("disabled","disabled");
 										$("#updateUserInformationResult").css({"color":"green"});
+										$(".userFullName").text($("#firstName").val()+" "+$("#lastName").val());
 									} else if (data["status"] == "fail") {
 										$("#updateUserInformationResult").css({"color":"red"});
 									}

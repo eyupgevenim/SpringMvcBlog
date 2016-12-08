@@ -1,13 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-9"
+	pageEncoding="ISO-8859-9"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <!DOCTYPE html PUBLIC>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>KayÄ±t</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-9">
+<title>Kayıt</title>
 </head>
 <body>
 	
@@ -20,21 +20,21 @@
 							<div class="col-lg-12">
 								<c:url value="/account/register" var="registerUrl"/>
 								<form:form modelAttribute="user" action="${registerUrl }" method="post" role="form">
-									<h2>KayÄ±t ol</h2>
+									<h2>Kayıt ol</h2>
 									<div class="form-group">
 										<form:input path="UserName" type="text" tabindex="1" class="form-control" 
-											placeholder="KullanÄ±cÄ± AdÄ±" title="En az Ã¼Ã§ karekter girilmeli" required="required" pattern="[A-Za-z0-9]{3,20}" />
+											placeholder="Kullanıcı Adı" title="En az üç karekter girilmeli" required="required" pattern="[A-Za-z0-9]{3,20}" />
 										<form:errors path="UserName" cssStyle="color: #ff0000;" />
 									</div>
 									
 									<div class="form-group">
 										<form:input path="FirstName" type="text" tabindex="1" class="form-control" 
-											placeholder="AdÄ±" title="En az Ã¼Ã§ harf girilmeli" required="required" pattern="[A-Za-zÄÄŸÃœÃ¼ÅÅŸÄ°Ã–Ã¶Ã‡Ã§]{3,20}" />
+											placeholder="Adı" title="En az üç harf girilmeli" required="required" pattern="[A-Za-zĞğÜüŞşİÖöÇç]{3,20}" />
 										<form:errors path="FirstName" cssStyle="color: #ff0000;" />
 									</div>
 									<div class="form-group">
 										<form:input path="LastName" type="text" tabindex="1" class="form-control" 
-											placeholder="SoyadÄ±" title="En az Ã¼Ã§ harf girilmeli" required="required" pattern="[A-Za-zÄÄŸÃœÃ¼ÅÅŸÄ°Ã–Ã¶Ã‡Ã§]{3,20}" />
+											placeholder="Soyadı" title="En az üç harf girilmeli" required="required" pattern="[A-Za-zĞğÜüŞşİÖöÇç]{3,20}" />
 										<form:errors path="LastName" cssStyle="color: #ff0000;" />
 									</div>
 									
@@ -50,7 +50,7 @@
 									</div>
 									<div class="form-group">
 										<form:input path="ConfirmPassword" type="password" tabindex="2" class="form-control" 
-											placeholder="ParolayÄ± tekrar edin" required="required" />
+											placeholder="Parolayı tekrar edin" required="required" />
 										<form:errors path="ConfirmPassword" cssStyle="color: #ff0000;" />
 									</div>
 									<div class="form-group">
@@ -59,7 +59,7 @@
 												<input type="submit" name="register-submit"
 													id="register-submit" tabindex="4"
 													class="form-control btn btn-register"
-													value="Åimdi KayÄ±t Ol">
+													value="Şimdi Kayıt Ol">
 											</div>
 										</div>
 									</div>
