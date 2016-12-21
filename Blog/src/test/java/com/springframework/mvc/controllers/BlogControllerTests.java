@@ -3,11 +3,14 @@ package com.springframework.mvc.controllers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.springframework.mvc.AbstractContextControllerTests;
+import com.springframework.mvc.dao.BlogDao;
+import com.springframework.mvc.dao.PostDao;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -24,6 +27,13 @@ public class BlogControllerTests  extends AbstractContextControllerTests {
 	
 	private MockMvc mockMvc;
 	
+
+	@Autowired
+	BlogDao blogDAO;
+	
+	@Autowired
+	PostDao postDAO;
+	
 	private Map<String, String> map;
 
 	@Before
@@ -32,55 +42,46 @@ public class BlogControllerTests  extends AbstractContextControllerTests {
 		this.mockMvc = webAppContextSetup(this.wac).build();
 		
 		map = new HashMap<String, String>();
-		map.put("blogName", "ExampleBlogName");
-		map.put("menu", "exampleMenuName");
-		map.put("postTitle", "example-post-title");
+		map.put("blogUrl", "eyupgevenim");
+		map.put("menu", "Anasayfa");
+		map.put("requestMapping", "Test-Title");
 	}
 	
 	@Test
 	public void testViewBlog() throws Exception {
 		
-		this.mockMvc.perform(get("/{blogName}", map.get("blogName")))
-						.andExpect(model().attribute("bn", map.get("blogName")))
-						.andExpect(model().attribute("mn", "default:Home"))
-						.andExpect(model().attribute("tl", "title:null"))
+		this.mockMvc.perform(get("/{blogUrl}", map.get("blogUrl")))
 						.andExpect(view().name(containsString("blogs/blog")));
 		
 		assertEquals(UriComponentsBuilder
-				.fromPath("/{blogName}")
-				.buildAndExpand(map).toUriString(), "/"+map.get("blogName"));
+				.fromPath("/{blogUrl}")
+				.buildAndExpand(map).toUriString(), "/"+map.get("blogUrl"));
 	}
 	
 	@Test
 	public void testViewBlogMenu() throws Exception {
 		
-		this.mockMvc.perform(get("/{blogName}/{menu}",
-									map.get("blogName"),map.get("menu")))
-						.andExpect(model().attribute("bn", map.get("blogName")))
-						.andExpect(model().attribute("mn", map.get("menu")))
-						.andExpect(model().attribute("tl", "title:null"))
+		this.mockMvc.perform(get("/{blogUrl}/{menu}",
+									map.get("blogUrl"),map.get("menu")))
 						.andExpect(view().name(containsString("blogs/blog")));
 		
 		assertEquals(UriComponentsBuilder
-						.fromPath("/{blogName}/{menu}")
+						.fromPath("/{blogUrl}/{menu}")
 						.buildAndExpand(map).toUriString(), 
-						"/"+map.get("blogName")+"/"+map.get("menu"));
+						"/"+map.get("blogUrl")+"/"+map.get("menu"));
 	}
 
 	@Test
 	public void testViewBlogPost() throws Exception {
 		
-		this.mockMvc.perform(get("/{blogName}/{menu}/{postTitle}", 
-									map.get("blogName"),map.get("menu"),map.get("postTitle")))
-						.andExpect(model().attribute("bn", map.get("blogName")))
-						.andExpect(model().attribute("mn", map.get("menu")))
-						.andExpect(model().attribute("tl", map.get("postTitle")))
+		this.mockMvc.perform(get("/{blogUrl}/{menu}/{requestMapping}", 
+									map.get("blogUrl"),map.get("menu"),map.get("requestMapping")))
 						.andExpect(view().name(containsString("blogs/blog-sharing")));
 		
 		assertEquals(UriComponentsBuilder
-						.fromPath("/{blogName}/{menu}/{postTitle}")
+						.fromPath("/{blogUrl}/{menu}/{requestMapping}")
 						.buildAndExpand(map).toUriString(), 
-						"/"+map.get("blogName")+"/"+map.get("menu")+"/"+map.get("postTitle"));
+						"/"+map.get("blogUrl")+"/"+map.get("menu")+"/"+map.get("requestMapping"));
 	}
 	
 }

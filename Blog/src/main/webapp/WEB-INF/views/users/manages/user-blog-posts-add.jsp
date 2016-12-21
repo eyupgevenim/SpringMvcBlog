@@ -1,12 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-9"
+	pageEncoding="ISO-8859-9"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Blog1 - YazÄ± Ekle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-9">
+<title>${blog.blogName} - Yazý Ekle</title>
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,31 +30,33 @@
 	<!-- Main Content -->
 	<div class="container-fluid">
 		<div class="side-body">
-			<h1>Blog1 - YazÄ± Ekle</h1>
+			<h1>${blog.blogName} - Yazý Ekle</h1>
 			<hr>
-			<form action="#" class="form-group">
+			<c:url value="/user/addPost/${blog.blogUrl}" var="addPostUrl"/>
+			<form:form action="${addPostUrl}" method="post" class="form-group" onsubmit="if(!onSubmitPost()) return false;">
 				<div class="row">
-					<h4>BaÅŸlÄ±k</h4>
+					<h4>Baþlýk</h4>
 				</div>
 				<div class="row">
 					<div class="input-group col-xs-12 col-md-6">
-						<input type="text" id="post-title" class=" form-control" name="name" value="">
+						<input type="text" id="post-title" name="post-title" class=" form-control" required="required" />
 					</div>
 				</div>
+				<input type="hidden" id="post-content" name="post-content" class=" form-control" value="">
 				<br>
 				<div class="row">
 					 <div id="summernote"> </div>
 				</div>
 				<br>
 				<div class="row">
-					<button class="col-xs-6 pull-right col-md-1 btn btn-success" style="margin-left:10px">YayÄ±nla</button>
+					<button class="col-xs-6 pull-right col-md-1 btn btn-success" type="submit" style="margin-left:10px">Yayýnla</button>
 					<button class="col-xs-6 pull-right col-md-1 btn btn-warning" style="margin-left:10px">Taslak</button>
 					<button class="col-xs-6 pull-right col-md-2 btn btn-default" style="margin-left:10px"
 					 	type="button" id="btn-preview" data-toggle="modal" data-target=".bs-example-modal-lg">
-					 	<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>Ã–nizleme
+					 	<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>Önizleme
 					 </button>
 				</div>
-			</form>
+			</form:form>
 		</div>
 	</div>
 	

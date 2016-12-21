@@ -33,7 +33,7 @@
 		   <link href="<c:url value="/resources/css/user/simple-sidebar.css" />"
 		        rel="stylesheet"  type="text/css" />
 		        
-		    <c:if test="${location == 'addPost' }">
+		    <c:if test="${location == 'addPost' || location == 'settingsBlog'  }">
 		    	<link href="<c:url value="/resources/lib/summernote/dist/summernote.css" />"
 			        rel="stylesheet"  type="text/css" />
 		    </c:if> 
@@ -68,7 +68,7 @@
 		    <script type="text/javascript" src="<c:url value="/resources/js/general/main.js" />" ></script>
 		    -->
 		    
-		    <c:if test="${location == 'addPost' }">
+		    <c:if test="${location == 'addPost' || location == 'settingsBlog' }">
 			   <script type="text/javascript" src="<c:url value="/resources/lib/summernote/dist/summernote.js" />"></script>
 			   <script type="text/javascript">
 					    $(document).ready(function() {
@@ -81,6 +81,21 @@
 					        	$("#myModalTitle").html($('#post-title').val());
 					            $("#preview").html($('#summernote').summernote('code'));
 					        });
+					        
+					        window.onSubmitPost = function(){
+					        	$("#post-content").val($('#summernote').summernote('code'));
+					        	
+					        	if($('#summernote').summernote('code').trim() == ""){
+					        		
+					        		///$('#summernote').summernote('isEmpty') // true or false
+					        		
+					        		alert("İçeriği Boş Geçemezsiniz !!!");
+					        		return false;
+					        	}else{
+					        		return true;
+					        	}
+					        	
+					        }
 					        
 					        /* 
 					        $("#post-title,#summernote").change(function(){
@@ -167,7 +182,7 @@
 										                                '<div id="dropdown-lvl1-settings-'+value.id+'" class="panel-collapse collapse">'+
 										                                    '<div class="panel-body">'+
 										                                        '<ul class="nav navbar-nav">'+
-										                                            '<li><a href="#">Ayar1</a></li>'+
+										                                            '<li><a href="${pageContext.request.contextPath}/user/settingsBlog/'+value.blogUrl+'">Menü Düzenleme</a></li>'+
 										                                            '<li><a href="#">Ayar2</a></li>'+
 										                                            '<li><a href="#">Ayar3</a></li>'+
 										                                        '</ul>'+
@@ -279,6 +294,242 @@
 					   $(document.body).on("change", "#userName,#firstName,#lastName,#email", function(){
 						   $("#btnSubmitUserInformation").removeAttr("disabled");
 						});
+					   
+					   
+					   //remove menu
+					   window.removeMenu = function(id) {
+						   
+						   var token = $("meta[name='_csrf']").attr("content");
+						    var header = $("meta[name='_csrf_header']").attr("content");
+						   
+						   var smenuPars=id.split("_");
+						   var menuId = smenuPars[1];
+						   var blogId = smenuPars[2];
+						   
+						   var conf = confirm("Menüyü Silmek istediğinize emin misiniz?");
+						   if(conf == true){
+							   
+							   $.ajax({
+									type : "POST",
+									url : "${pageContext.request.contextPath}/user/removeMenu",
+									data: {
+										token:token,
+										menuId:menuId,
+										blogId:blogId
+									},
+							        beforeSend:function(xhr){
+							             xhr.setRequestHeader(header, token);
+							        },
+									timeout : 100000,
+									success : function(data) {
+										//console.log("SUCCESS: ", data);
+										if(data == true){
+											$("#menu_"+menuId+"_"+blogId).remove();
+											$("#eMenu_"+menuId+"_"+blogId).remove();
+										}else{
+											alert("Menü kaldırılırken bir hata oluştu");
+										}
+									},
+									error : function(e) {
+										console.log("ERROR: ", e);
+									}
+								});//$.ajax
+						   }//if(conf)
+					   }//window.removeMenu = function(id)
+					   
+					   
+					   
+					   //edit menu
+					   window.editMenu = function(id) {
+						   
+						   var token = $("meta[name='_csrf']").attr("content");
+						    var header = $("meta[name='_csrf_header']").attr("content");
+						   
+						   var smenuPars=id.split("_");
+						   var menuId = smenuPars[1];
+						   var blogId = smenuPars[2];
+						   
+						   $.ajax({
+								type : "GET",
+								url : "${pageContext.request.contextPath}/user/editMenuGet",
+								data: {
+									token:token,
+									menuId:menuId,
+									blogId:blogId
+								},
+						        beforeSend:function(xhr){
+						             xhr.setRequestHeader(header, token);
+						        },
+								timeout : 100000,
+								success : function(data) {
+									//console.log("SUCCESS: ", data);
+									
+									 $("#myModalLabel").html($("#nMenu_"+menuId+"_"+blogId).text()+" Menüsünü Düzenleme");
+									 $(".menu-blog-id").attr('id','menu-blog-id_'+menuId+'_'+blogId);
+									 
+									 $('#summernote').summernote('reset');
+									 
+									 $.each(data, function(key, value){
+										 //$('#summernote').summernote('insertText', value.postContent);
+										 $('#summernote').summernote('code', value.postContent);
+									  });
+									 
+								},
+								error : function(e) {
+									console.log("ERROR: ", e);
+								}
+							});//$.ajax
+					   }//window.editMenu = function(id)
+					   
+					   
+					   //edit menu save
+					   window.editMenuSave = function(id) {
+						   
+						   var token = $("meta[name='_csrf']").attr("content");
+						   var header = $("meta[name='_csrf_header']").attr("content");
+						   
+						   var smenuPars=id.split("_");
+						   var menuId = smenuPars[1];
+						   var blogId = smenuPars[2];
+						   
+						   if($('#summernote').summernote('isEmpty')){
+							   //model kapat
+							   return false;
+							}
+						   
+						   var postContent = $('#summernote').summernote('code');
+						   var postTitle = $("#nMenu_"+menuId+"_"+blogId).text();
+						   
+						   $.ajax({
+								type : "POST",
+								url : "${pageContext.request.contextPath}/user/editMenuSave",
+								data: {
+									token:token,
+									menuId:menuId,
+									blogId:blogId,
+									postContent:postContent,
+									postTitle:postTitle
+								},
+						        beforeSend:function(xhr){
+						             xhr.setRequestHeader(header, token);
+						        },
+								timeout : 100000,
+								success : function(data) {
+									//console.log("SUCCESS: ", data);
+									
+									if(data){
+										$('#myModal').modal('toggle');
+									}else{
+										alert("Kayıt sırasında bir hata oluştu !!!");
+									}
+								},
+								error : function(e) {
+									console.log("ERROR: ", e);
+								}
+							});//$.ajax
+					   }//window.editMenuSave = function(id)
+					   
+					   window.getBlogComments = function(){
+						   
+						   var token = $("meta[name='_csrf']").attr("content");
+						   var header = $("meta[name='_csrf_header']").attr("content");
+						   $.ajax({
+								type : "POST",
+								url : "${pageContext.request.contextPath}/user/getBlogComments",
+								data: {
+									token:token,
+									blogUrl:'${blogUrl}'
+								},
+						        beforeSend:function(xhr){
+						             xhr.setRequestHeader(header, token);
+						        },
+								timeout : 100000,
+								success : function(data) {
+									console.log("SUCCESS: ", data);
+									
+									$.each(data, function(key, value){
+										var postClass = "post_"+value.postId;
+										var postId= $("#"+postClass);
+										if(postId.hasClass(postClass)){
+											
+											var com_pane = $("<div />",{"class":"media"}).html(
+													'<!-- Comment -->'
+													+'<a class="pull-left" href="#">'
+													+'<img class="media-object" src="<c:url value="/resources/img/visitor/visitor.png" />" style="height: 60px" alt="">'
+													+'</a>'
+													+'<div class="media-body">'
+													+'<h4 class="media-heading">'+value.name
+													+'<small> '+value.dateTime+' </small>'
+													+'</h4>'
+													+value.comment
+													+'</div>'
+											);
+											
+											$("#collapse_"+value.postId+" > .panel-body").append(com_pane);
+											
+											//console.log("var...");
+										}else{
+											
+											var tab_pane = $("<div />", {
+											    "id": postClass,
+											    "class": "panel panel-default "+postClass
+											  }).html(
+													  '<div class="panel-heading" role="tab" id="heading_'+value.postId+'" onclick="tabClick(this.id)">'
+														+'<h4 class="panel-title">'
+															+'<a class="collapsed" role="button" data-toggle="collaps"'
+																+'data-parent="#accordion" href="#collapse_'+value.postId+'" onclick="return false;"'
+																+'aria-expanded="false" aria-controls="collapse_'+value.postId+'">'
+																+value.postTitle
+															+'</a>'
+														+'</h4>'
+													+'</div>'
+													+'<div id="collapse_'+value.postId+'" class="panel-collapse collapse in"'
+														+'role="tabpanel" aria-labelledby="heading_'+value.postId+'">'
+														+'<div class="panel-body">'
+														+'<!-- Comment -->'
+														+'<div class="media">'
+														+'<a class="pull-left" href="#">'
+														+'<img class="media-object" src="<c:url value="/resources/img/visitor/visitor.png" />" style="height: 60px" alt="">'
+														+'</a>'
+														+'<div class="media-body">'
+														+'<h4 class="media-heading">'+value.name
+														+'<small> '+value.dateTime+' </small>'
+														+'</h4>'
+														+value.comment
+														+'</div>'
+														+'</div>'
+														+'</div>'
+													+'</div> '
+											  );
+										   
+										   $("#accordion").append(tab_pane);
+											
+											//console.log("yook...");
+										}//if(postId.hasClass(postClass))
+										
+										
+									  });//$.each(data, function(key, value)
+								},
+								error : function(e) {
+									console.log("ERROR: ", e);
+								}
+							});//$.ajax
+						   
+					   }($);//window.getBlogComments = function()
+					   
+					   window.tabClick = function(id){
+						   
+						   var parse = id.split("_");
+						   var parseId =parse[1];
+						   var collapse = $("#collapse_"+parseId);
+						   
+						   if(collapse.hasClass("in")){
+							   collapse.removeClass("in");
+						   }else{
+							   collapse.addClass("in");
+						   }
+					   }// window.tabClick = function(id)
+					   
 					   
 					   
 				  });

@@ -1,34 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <!DOCTYPE html PUBLIC>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Blog Site</title>
 </head>
-<body>
-<%-- 
-	<div class="container" style="margin-top: 60px;height: 300px">
-		<div class="row">
-			<h3 class="text-center"> Blog Name: ${bn}</h3>
-			<h3 class="text-center"> Blog Menu: ${mn}</h3>
-			<h3 class="text-center"> tittle: ${tl}</h3>
-		</div>
-	</div>
-	 --%>
-	
-	
+<body>	
 	
 	<!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header" style="background-image: url('/resources/img/home/home-bg.jpg');margin-top: 80px">
+    <header class="intro-header">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="post-heading">
-                        <h1>Man must explore, and this is exploration at its greatest</h1>
-                        <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
-                        <span class="meta">Posted by <a href="#">Start Bootstrap</a> on August 24, 2014</span>
+                    <div class="post-heading" style="padding-bottom:20px">
+                        <h1 style="color:black;">${post.postTite}</h1>
+                        <!--  
+                        <span class="meta" style="color:black;">Payaşım <a href="#" style="color:blue;">
+                        ... </a> Tarafından  15/12/2016</span>
+                        -->
+                        <span class="meta" style="color:black;"> ${post.dateTime} </span>
                     </div>
                 </div>
             </div>
@@ -40,48 +36,73 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
-
-                    <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
-
-                    <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
-
-                    <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
-
-                    <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
-
-                    <h2 class="section-heading">The Final Frontier</h2>
-
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-                    <blockquote>The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-                    <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-                    <h2 class="section-heading">Reaching for the Stars</h2>
-
-                    <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
-
-                    <a href="#">
-                        <img class="img-responsive" src="img/post-sample-image.jpg" alt="">
-                    </a>
-                    <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
-
-                    <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
-
-                    <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-                    <p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+                	${post.postContent}
                 </div>
+                
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                	<hr>
+
+	                <!-- Blog Comments -->
+	
+	                <!-- Comments Form -->
+	                <div class="well">
+	                
+	                
+	                	
+	                
+	                    <h4>Yazıya Yorum Ekle</h4>
+	                    <br>
+	                    <c:url value="/${blog.blogUrl}/${post.requestMapping}/addComment" var="commentUrl"/>
+	                    <form:form modelAttribute="comment" role="form" action="${commentUrl }" method="post">
+	                    	
+	                    	<div class="form-group">
+							    <label for="email">Email Adres:</label>
+							    <form:input type="email" path="Email" class="form-control" placeholder="Email" required="required" />
+							 </div>
+							 
+							 <div class="form-group">
+							    <label for="name">Ad ve Soyad:</label>
+							    <form:input type="text" class="form-control" path="Name" placeholder="Ad ve Soyad" required="required" />
+							 </div>
+	                    	
+	                        <div class="form-group">
+	                        	<label>Yorum Yaz:</label>
+	                            <form:textarea class="form-control" path="Comment" rows="3" maxlength="250"
+	                            placeholder="yorum yazın..." required="required" />
+	                        </div>
+	                        <button type="submit" class="btn btn-primary">Gönder</button>
+	                    </form:form>
+	                </div>
+	
+	                <hr>
+	                
+	                <c:if test="${not empty postComments}">
+	                	<c:forEach var="comment" items="${postComments}">
+	                	
+	                		<!-- Comment -->
+			                <div class="media">
+			                    <a class="pull-left" href="#">
+			                        <img class="media-object" src="<c:url value="/resources/img/visitor/visitor.png" />" style="height: 60px" alt="">
+			                    </a>
+			                    <div class="media-body">
+			                        <h4 class="media-heading">${comment.name}
+			                            <small>${comment.dateTime}</small>
+			                        </h4>
+			                        ${comment.comment}
+			                    </div>
+			                </div>
+	                		<br />
+	                	</c:forEach>
+	                </c:if>
+	                
+                </div>
+                
             </div>
         </div>
     </article>
 
     <hr>
-	
-	
-	
+    
 </body>
 </html>

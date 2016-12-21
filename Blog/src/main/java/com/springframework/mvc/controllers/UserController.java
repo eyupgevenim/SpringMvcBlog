@@ -1,6 +1,8 @@
 package com.springframework.mvc.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.springframework.mvc.dao.BlogDao;
 import com.springframework.mvc.dao.CategoryDao;
+import com.springframework.mvc.dao.PostDao;
 import com.springframework.mvc.dao.UserDao;
 import com.springframework.mvc.models.Blog;
+import com.springframework.mvc.models.Comment;
+import com.springframework.mvc.models.Menu;
+import com.springframework.mvc.models.Post;
 import com.springframework.mvc.models.User;
 import com.springframework.mvc.validation.BlogValidation;
 
@@ -40,11 +46,15 @@ public class UserController {
 	CategoryDao categoryDAO;
 	
 	@Autowired
+	PostDao postDAO;
+	
+	@Autowired
 	private BlogValidation blogValidator;
 	
 	
 	@RequestMapping(value = {"","/","panel"}, method = RequestMethod.GET)
 	public String user( Model model) {
+		model.addAttribute("listBlog",blogDAO.getUserBlogs(getUser().getEmail()));
 		
 		return "users/manages/user";
 	}
@@ -94,23 +104,91 @@ public class UserController {
 		
 	}
 	
+	@RequestMapping(value = "settingsBlog/{blogUrl}", method = RequestMethod.GET)
+	public String settingsBlog(@PathVariable("blogUrl") String blogUrl, Model model) throws Exception {
+		
+		List <Menu> blogMenus = blogDAO.getBlogsMenus(blogUrl);
+		
+		model.addAttribute("blog",blogDAO.findBlogByBlogUrl(blogUrl));
+		model.addAttribute("blogMenus",blogMenus);
+		model.addAttribute("menu", new Menu());
+		//model.addAttribute("menu",blogDAO.getAllMenus());
+		model.addAttribute("menu",blogDAO.getUndefineAllMenus(blogMenus));
+		
+		model.addAttribute("location", "settingsBlog");
+		
+		return "users/manages/user-blog-settings";
+	}
+	
+	@RequestMapping(value = "settingsBlog/{blogUrl}", method = RequestMethod.POST)
+	public String settingsBlog(HttpServletRequest request, @PathVariable("blogUrl") String blogUrl, 
+			Model model) throws Exception {
+		
+		Menu menu = new Menu();
+		menu.setId(Integer.valueOf(request.getParameter("Id")));
+		
+		Blog blog = blogDAO.findBlogByBlogUrl(blogUrl);
+		menu.setBlogId(blog.getId());
+		
+		List<Menu> menus = new ArrayList<Menu>();
+		menus.add(menu);
+		
+		if(blogDAO.addBlogMenus(menus)){
+			return "redirect:/user/settingsBlog/"+blogUrl;
+		}
+		
+		model.addAttribute("location", "settingsBlog");
+		
+		return "redirect:/user/settingsBlog/"+blogUrl;
+	}
+	
 	@RequestMapping(value = "commentBlog/{blogUrl}", method = RequestMethod.GET)
 	public String commentBlog(@PathVariable("blogUrl") String blogUrl, Model model) throws Exception {
+		model.addAttribute("blogUrl",blogUrl);
+		model.addAttribute("blog",blogDAO.findBlogByBlogUrl(blogUrl));
 		
 		return "users/manages/user-blog-comments";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "getBlogComments", method = RequestMethod.POST)
+	public List<Comment> getBlogComments(HttpServletRequest request, HttpServletResponse response){
+		String blogUrl = request.getParameter("blogUrl");
+		
+		return postDAO.getBlogComents(blogUrl);
 	}
 	
 	@RequestMapping(value = "/post/{blogUrl}", method = RequestMethod.GET)
 	public String post(@PathVariable("blogUrl") String blogUrl, Model model) throws Exception {
 		
+		model.addAttribute("blog",blogDAO.findBlogByBlogUrl(blogUrl));
+		//model.addAttribute("listPost",postDAO.getBlogPosts(blogUrl));
+		model.addAttribute("listPost",postDAO.getBlogPosts("Anasayfa", blogUrl));
 		return "users/manages/user-blog-posts";
 	}
 	
-	@RequestMapping(value = "addPost", method = RequestMethod.GET)
-	public String addPost( Model model) {
+	@RequestMapping(value = "addPost/{blogUrl}", method = RequestMethod.GET)
+	public String addPost(@PathVariable("blogUrl") String blogUrl, Model model) {
 		
+		model.addAttribute("blog",blogDAO.findBlogByBlogUrl(blogUrl));
 		model.addAttribute("location", "addPost");
 		return "users/manages/user-blog-posts-add";
+	}
+	
+	@RequestMapping(value = "addPost/{blogUrl}", method = RequestMethod.POST)
+	public String addPost(@PathVariable("blogUrl") String blogUrl, HttpServletRequest request, Model model) {
+		
+		Post post = new Post();
+		Menu menu = blogDAO.getMenuByMenuName("Anasayfa",blogUrl);
+		post.setPostContent(request.getParameter("post-content"));
+		post.setPostTite(request.getParameter("post-title"));
+		post.setRequestMapping(setRequestMapping(request.getParameter("post-title")));
+		post.setBlogMenuId(menu.getId());
+		
+		if(postDAO.savePost(post)){
+			return "redirect:/user/post/"+blogUrl;
+		}
+		return "redirect:/user/addPost/"+blogUrl;
 	}
 	
 	@ResponseBody
@@ -219,6 +297,28 @@ public class UserController {
 		model.addAttribute("listBlog", blogDAO.getUserBlogs(user.getEmail()));
 	}
 	
+	private String setRequestMapping(String title){
+		
+		title = title.replaceAll("ð", "g")
+				.replaceAll("þ", "s")
+				.replaceAll("ý", "i")
+				.replaceAll("ü", "u")
+				.replaceAll("ö", "o")
+				.replaceAll("ç", "c")
+				.replaceAll("Ð", "G")
+				.replaceAll("Þ", "S")
+				.replaceAll("Ý", "I")
+				.replaceAll("Ü", "U")
+				.replaceAll("Ö", "O")
+				.replaceAll("Ç", "C");
+				//.replaceAll(" ", "-");
+		title = title.replaceAll("[^a-zA-Z0-9_-]", "-");//'a-zA-Z0-9_-' haricindeki herþeyi '-' yap
+		title = title.replaceAll("-*$", "");//sondaki tüm '-' temizle
+		//title = title.replaceAll("-{2,80}", "-");//birden 80 e kadarki '-' larý bir taneye çeviri
+		title = title.replaceAll("[-]-*", "-"); //birden fazla '-' larý bir taneye çeviri
+		return title;
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "getUserMenu", method = RequestMethod.POST)
 	public  Map<String,Object> getUserMenu(HttpServletRequest request, HttpServletResponse response){
@@ -237,6 +337,48 @@ public class UserController {
 		obj.put("listBlog", blogDAO.getUserBlogs(user.getEmail()));
 		
 		return obj;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "removeMenu", method = RequestMethod.POST)
+	public boolean RemoveMenu(HttpServletRequest request, HttpServletResponse response){
+		String menuId = request.getParameter("menuId");
+		String blogId = request.getParameter("blogId");
+		return blogDAO.deleteMenu(Integer.valueOf(menuId), Integer.valueOf(blogId));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "editMenuGet", method = RequestMethod.GET)
+	public List<Post> EditMenuGet(HttpServletRequest request, HttpServletResponse response){
+		String menuId = request.getParameter("menuId");
+		String blogId = request.getParameter("blogId");
+		//List<Post> post = postDAO.getBlogPosts(Integer.valueOf(menuId), Integer.valueOf(blogId));
+		
+		return postDAO.getBlogPosts(Integer.valueOf(menuId), Integer.valueOf(blogId));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "editMenuSave", method = RequestMethod.POST)
+	public boolean EditMenuSave(HttpServletRequest request, HttpServletResponse response){
+		String menuId = request.getParameter("menuId");
+		String blogId = request.getParameter("blogId");
+		
+		
+		Post post = new Post();
+		Menu menu = blogDAO.getMenuByMenuId(Integer.valueOf(menuId), Integer.valueOf(blogId));
+		post.setPostContent(request.getParameter("postContent"));
+		post.setPostTite(request.getParameter("postTitle"));
+		post.setRequestMapping(setRequestMapping(request.getParameter("postTitle")));
+		post.setBlogMenuId(menu.getId());
+		
+		List<Post> p = postDAO.getBlogPosts(Integer.valueOf(menuId), Integer.valueOf(blogId));
+		
+		if(p.size() > 0){
+			post.setId(p.get(0).getId());
+			return postDAO.updatePost(post);
+		}
+		
+		return postDAO.savePost(post);
 	}
 	
 }

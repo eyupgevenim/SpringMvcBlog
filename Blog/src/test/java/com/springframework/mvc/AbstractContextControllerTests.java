@@ -14,8 +14,5 @@ public class AbstractContextControllerTests {
 
 	@Autowired
 	protected WebApplicationContext wac;
-
-	public void tearDown() {
-		this.tearDown();
-	}
+	
 }

@@ -8,15 +8,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/${bn}">YOUR LOGO</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/${blog.blogUrl}">${blog.blogName}</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="${pageContext.request.contextPath}/${bn}/home">HOME</a></li>
-                     <li><a href="${pageContext.request.contextPath}/${bn}/service">SERVICES</a></li>
-                    <li><a href="${pageContext.request.contextPath}/${bn}/portfolio">PORTFOLIO</a></li>
-                     <li><a href="${pageContext.request.contextPath}/${bn}/pricing">PRICING</a></li>
-                      <li><a href="${pageContext.request.contextPath}/${bn}/contact">CONTACT</a></li>
+                	<%-- <li><a href="${pageContext.request.contextPath}/${blog.blogUrl}/Anasayfa">Anasayfa</a></li> --%>
+                	<c:if test="${not empty blogMenus}"> 
+                		<c:forEach var="menu" items="${blogMenus}"> 
+                			<li><a href="${pageContext.request.contextPath}/${blog.blogUrl}/${menu.menuName}">${menu.menuName}</a></li>
+                		</c:forEach> 
+                	</c:if>
                 </ul>
             </div>
            

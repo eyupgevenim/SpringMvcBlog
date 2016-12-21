@@ -31,7 +31,12 @@
 <link href="<c:url value="/resources/lib/blog/css/clean-blog.css" />"
 	rel="stylesheet" type="text/css" />
 
-
+ 
+ <%-- 
+ <link href="<c:url value="/resources/lib/summernote/dist/summernote.css" />"
+			        rel="stylesheet"  type="text/css" />
+  --%>
+ 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
 	   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -47,7 +52,11 @@
 	
 	<script type="text/javascript"
 		src="<c:url value="/resources/lib/blog/js/clean-blog.js" />"></script>
-
+ <%-- 
+ <script type="text/javascript" src="<c:url value="/resources/lib/summernote/dist/summernote.js" />"></script>
+		 --%>	   
+ 
+ 
 	<script type="text/javascript"
 		src="<c:url value="/resources/lib/jquery/dist/jquery.min.js" />"></script>
 	<script type="text/javascript"

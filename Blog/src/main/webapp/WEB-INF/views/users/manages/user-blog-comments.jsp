@@ -22,35 +22,15 @@
 	<!-- Main Content -->
 	<div class="container-fluid">
 		<div class="side-body">
-			<h1>Blog1 - Yorumlar</h1>
+			<h1>${blog.blogName} - Yorumları</h1>
 			<hr>
+			
 			<div class="row">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Yorum başlığı - Hangi yazı</h3>
-					</div>
-					<div class="panel-body">Yorum gövdesi</div>
-					<div class="panel-footer text-right">email@email.com</div>
+				<div class="panel-group" id="accordion" role="tablist">
+				
 				</div>
 			</div>
-			<div class="row">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Yorum başlığı - Hangi yazı</h3>
-					</div>
-					<div class="panel-body">Yorum gövdesi</div>
-					<div class="panel-footer text-right">email@email.com</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Yorum başlığı - Hangi yazı</h3>
-					</div>
-					<div class="panel-body">Yorum gövdesi</div>
-					<div class="panel-footer text-right">email@email.com</div>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 </body>

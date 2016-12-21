@@ -12,18 +12,14 @@ import com.springframework.mvc.validation.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-		AccountControllerTests.class,
 		BlogControllerTests.class,
-		HomeControllerTests.class,
-		UserControllerTests.class,
 		BlogDaoImplTests.class,
 		CategoryDaoImplTests.class,
-		UserDaoImplTests.class,
 		EmailValidationTests.class,
 		BlogValidationTests.class,
-		UserValidationTests.class
+		PostDaoImplTest.class
 })
-public class AllTests {
+public class AllTests2 {
 	
 	 	@BeforeClass
 	    public static void setUp() {

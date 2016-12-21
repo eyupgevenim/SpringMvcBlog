@@ -21,6 +21,10 @@
     <bean id="blogDAO" class="com.springframework.mvc.dao.impl.BlogDaoImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    
+    <bean id="postDAO" class="com.springframework.mvc.dao.impl.PostDaoImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 	 
 	<!-- Database connection string --> 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
