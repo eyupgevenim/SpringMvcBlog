@@ -11,30 +11,31 @@
 <body>
 	<!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="post-heading" style="padding-bottom:20px">
-                        <h1 style="color:black;">${post.postTite}</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Post Content -->
-    <article>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                	${post.postContent}
-                </div>
-                
-            </div>
-        </div>
-    </article>
-
+    <c:if test="${not empty post}">
+	   <header class="intro-header">
+	       <div class="container">
+	           <div class="row">
+	               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+	                   <div class="post-heading" style="padding-bottom:20px">
+	                       <h1 style="color:black;">${post.postTite}</h1>
+	                   </div>
+	               </div>
+	           </div>
+	       </div>
+	   </header>
+	
+	   <!-- Post Content -->
+	   <article>
+	       <div class="container">
+	           <div class="row">
+	               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+	               	${post.postContent}
+	               </div>
+	               
+	           </div>
+	       </div>
+	   </article>
+	</c:if>
     <hr>
 </body>
 </html>

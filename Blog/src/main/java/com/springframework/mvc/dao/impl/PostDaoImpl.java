@@ -9,6 +9,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -194,24 +195,29 @@ public class PostDaoImpl implements PostDao {
 				+ "INNER JOIN menus m ON m.Id=bm.MenuId "
 				+ "INNER JOIN blogs b ON b.Id=bm.BlogId "
 				+ "WHERE m.MenuName=? AND b.BlogUrl=? LIMIT 1";
+		try {
 		
-		Post post= jdbcTemplate.queryForObject(sql, new Object[]{menuName,blogUrl}, new RowMapper<Post>() {
-
-				@Override
-				public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-					Post post = new Post();
-					post.setId(rs.getInt("p.Id"));
-					post.setPostTite(rs.getString("p.PostTitle"));
-					post.setPostContent(rs.getString("p.PostContent"));
-					post.setRequestMapping(rs.getString("p.RequestMapping"));
-					post.setDateTime(rs.getDate("p.DateTime"));
+			Post post = jdbcTemplate.queryForObject(sql, new Object[]{menuName,blogUrl}, new RowMapper<Post>() {
+	
+					@Override
+					public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
+						Post post = new Post();
+						post.setId(rs.getInt("p.Id"));
+						post.setPostTite(rs.getString("p.PostTitle"));
+						post.setPostContent(rs.getString("p.PostContent"));
+						post.setRequestMapping(rs.getString("p.RequestMapping"));
+						post.setDateTime(rs.getDate("p.DateTime"));
+						
+						return post;
+					}
 					
-					return post;
-				}
-				
-			});
-		
-		  return post;
+				});
+			
+			  return post;
+		  
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 	
 	public boolean saveVisitorAndComment(final Comment comment){

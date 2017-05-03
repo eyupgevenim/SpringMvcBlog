@@ -49,8 +49,12 @@ public class BlogController{
 			//model.addAttribute("listPost",postDAO.getBlogPosts(blogUrl));
 			return "blogs/blog";
 		}
-			
-		model.addAttribute("post",postDAO.getBlogPost(menuName, blogUrl));
+		
+		Post post = postDAO.getBlogPost(menuName, blogUrl);
+		if(post != null)
+			model.addAttribute("post",post);
+		else
+			model.addAttribute("post","");
 		return "blogs/other-page";
 	}
 	
