@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Yeni Blog</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../assets/js/jquery.min.js" charset="utf-8"></script>
+    <script src="../assets/js/bootstrap.min.js" charset="utf-8"></script>
+    <!-- Custom CSS -->
+    <link href="../assets/css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <script type="text/javascript">
+        $(function() {
+            $('.navbar-toggle').click(function() {
+                $('.navbar-nav').toggleClass('slide-in');
+                $('.side-body').toggleClass('body-slide-in');
+                $('#search').removeClass('in').addClass('collapse').slideUp(200);
+
+                /// uncomment code for absolute positioning tweek see top comment in css
+                //$('.absolute-wrapper').toggleClass('slide-in');
+
+            });
+
+            // Remove menu for searching
+            $('#search-trigger').click(function() {
+                $('.navbar-nav').removeClass('slide-in');
+                $('.side-body').removeClass('body-slide-in');
+
+                /// uncomment code for absolute positioning tweek see top comment in css
+                //$('.absolute-wrapper').removeClass('slide-in');
+
+            });
+        });
+    </script>
+
+    <div class="row">
+        <!-- uncomment code for absolute positioning tweek see top comment in css -->
+        <!-- <div class="absolute-wrapper"> </div> -->
+        <!-- Menu -->
+        <div class="side-menu">
+
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <div class="brand-wrapper">
+                        <!-- Hamburger -->
+                        <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+                        <!-- Brand -->
+                        <div class="brand-name-wrapper">
+                            <a class="navbar-brand" href="#">
+                    Username
+                </a>
+                        </div>
+
+                        <!-- Search -->
+                        <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
+
+                        <!-- Search body -->
+                        <div id="search" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form class="navbar-form" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Arama yapın...">
+                                    </div>
+                                    <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main Menu -->
+                <div class="side-menu-container">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="user.html"><span class="glyphicon glyphicon-send"></span> Dashboard (genel blog bilgileri)</a></li>
+                        <li class="active"><a href="user-settings.html"><span class="glyphicon glyphicon-plane"></span> Kullanıcı Ayarları</a></li>
+
+
+                        <!-- Dropdown-->
+                        <li class="panel panel-default" id="dropdown">
+                            <a data-toggle="collapse" href="#dropdown-lvl1">
+                                <span class="glyphicon glyphicon-book"></span> Blog1 <span class="caret"></span>
+                            </a>
+
+                            <!-- Dropdown level 1 -->
+                            <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li><a href="user-blog1-posts.html">Yazılar</a></li>
+                                        <li><a href="user-blog1-comments.html">Yorumlar</a></li>
+
+
+                                        <!-- Dropdown level 2 -->
+                                        <li class="panel panel-default" id="dropdown">
+                                            <a data-toggle="collapse" href="#dropdown-lvl1-2">
+                                                <span class="glyphicon glyphicon-off"></span> Ayarlar <span class="caret"></span>
+                                            </a>
+                                            <div id="dropdown-lvl1-2" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ul class="nav navbar-nav">
+                                                        <li><a href="#">Ayar1</a></li>
+                                                        <li><a href="#">Ayar2</a></li>
+                                                        <li><a href="#">Ayar3</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- Dropdown-->
+                        <li class="panel panel-default" id="dropdown">
+                            <a data-toggle="collapse" href="#dropdown-lvl2-1">
+                                <span class="glyphicon glyphicon-book"></span> Blog2 <span class="caret"></span>
+                            </a>
+
+                            <!-- Dropdown level 1 -->
+                            <div id="dropdown-lvl2-1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li><a href="#">Yazılar</a></li>
+                                        <li><a href="#">Yorumlar</a></li>
+
+
+                                        <!-- Dropdown level 2 -->
+                                        <li class="panel panel-default" id="dropdown">
+                                            <a data-toggle="collapse" href="#dropdown-lvl2-2">
+                                                <span class="glyphicon glyphicon-pencil"></span> Ayarlar <span class="caret"></span>
+                                            </a>
+                                            <div id="dropdown-lvl2-2" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ul class="nav navbar-nav">
+                                                        <li><a href="#">Ayar1</a></li>
+                                                        <li><a href="#">Ayar2</a></li>
+                                                        <li><a href="#">Ayar3</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li><a href="#"><span class="glyphicons glyphicon-off"></span> Çıkış yap</a></li>
+
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="container-fluid">
+            <div class="side-body">
+                <h1> Yeni Blog Kur </h1>
+                <hr>
+
+                    <form action="">
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-xs-12 col-md-2 col-md-offset-2">
+
+                                    <label for="username">Blog Adı: </label>
+
+
+
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+
+                                    <div class="input-group">
+                                      <span class="input-group-addon" id="basic-addon3">blog.com/</span>
+                                      <input type="text" class="form-control" id="blog-url" aria-describedby="basic-addon3" placeholder="blog-adiniz">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-xs-12 col-md-2 col-md-offset-2">
+                                  <label for="username">Blog Kategorileri:</label>
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="panel panel-default">
+
+                                      <div class="panel-body">
+                                          <div class="col-xs-3 col-md-3">
+                                            <input type="checkbox" name="name" value="yazilim" > Yazılım <br>
+                                            <input type="checkbox" name="name" value="bilim" > Bilim <br>
+
+                                          </div>
+                                          <div class="col-xs-3 col-md-3">
+                                            <input type="checkbox" name="name" value="seyahat" > Gezi <br>
+                                            <input type="checkbox" name="name" value="bilim" > Politik <br>
+
+                                          </div>
+                                      </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="form-group">
+
+                                <div class="col-xs-6 col-md-2 col-md-offset-6">
+
+                                    <input type="submit" class="form-control btn-success" id="" value="Kaydet" >
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                    </form>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>
